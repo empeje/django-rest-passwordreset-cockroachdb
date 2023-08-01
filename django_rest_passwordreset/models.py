@@ -73,6 +73,8 @@ class ResetPasswordToken(models.Model):
     def save(self, *args, **kwargs):
         if not self.key:
             self.key = self.generate_key()
+        if not self.id:
+            self.id = self.generate_key()
         return super(ResetPasswordToken, self).save(*args, **kwargs)
 
     def __str__(self):
