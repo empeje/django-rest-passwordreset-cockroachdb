@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+from snowflake import SnowflakeGenerator
 
 from django_rest_passwordreset.tokens import get_token_generator
 
@@ -21,6 +22,11 @@ __all__ = [
     'get_password_reset_lookup_field',
     'clear_expired',
 ]
+
+def generate_id():
+    snowflake_gen = SnowflakeGenerator(42)
+    for i in range(1):
+        return next(snowflake_gen)
 
 
 class ResetPasswordToken(models.Model):
@@ -74,7 +80,7 @@ class ResetPasswordToken(models.Model):
         if not self.key:
             self.key = self.generate_key()
         if not self.id:
-            self.id = self.generate_key()
+            self.id = generate_id()
         return super(ResetPasswordToken, self).save(*args, **kwargs)
 
     def __str__(self):
